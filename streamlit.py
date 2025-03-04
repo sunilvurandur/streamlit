@@ -1,25 +1,43 @@
-import streamlit as st
+import json
+import streamlit.streamlit as st
 import pandas as pd
 import folium
 from streamlit_folium import st_folium
 import matplotlib.pyplot as plt
 import seaborn as sns
 from google.cloud import bigquery
+from google.oauth2 import service_account
+
 import os
 
-
-
-
-os.environ["GOOGLE_APPLICATION_CREDENTIALS"] = r"C:\Users\sunil suma\Desktop\SJSU\255-datamining\assignments\homework-1-452605-5b5a637a8011.json"
-
-# Function to load data from BigQuery (cached for performance)
-@st.cache
 def load_data():
-    client = bigquery.Client(project='homework-1-452605')
+    service_account_json = st.secrets["gcp_service_account"]
+    
+    # 2. Convert it to a Python dict
+    service_account_dict = json.loads(service_account_json)
+    
+    # 3. Create credentials object
+    credentials = service_account.Credentials.from_service_account_info(service_account_dict)
+    
+    # 4. Create BigQuery client with these credentials
+    client = bigquery.Client(
+        project="homework-1-452605",
+        credentials=credentials
+    )
+    
+    # 5. Query your data
     query = "SELECT * FROM `homework-1-452605.survery_1309.survey_table`"
     df = client.query(query).to_dataframe()
     df['ACTIVEFLAG'] = df['ACTIVEFLAG'].fillna(0).astype(int)
     return df
+
+# @st.cache
+# def load_data():
+#     client = bigquery.Client(project='homework-1-452605')
+#     query = "SELECT * FROM `homework-1-452605.survery_1309.survey_table`"
+#     df = client.query(query).to_dataframe()
+#     df['ACTIVEFLAG'] = df['ACTIVEFLAG'].fillna(0).astype(int)
+#     return df
 
 data = load_data()
 
