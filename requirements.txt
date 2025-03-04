@@ -5,3 +5,4 @@ streamlit-folium
 matplotlib
 seaborn
 google-cloud-bigquery
+google-auth
