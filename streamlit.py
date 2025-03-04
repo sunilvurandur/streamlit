@@ -13,15 +13,12 @@ import os
 def load_data():
     st.write("Secrets keys:", list(st.secrets.keys()))
 
-service_account_json = st.secrets["gcp_service_account"]
-st.write("Service account JSON length:", len(service_account_json))
-
     service_account_json = st.secrets["gcp_service_account"]
     
-    # 2. Convert it to a Python dict
+    st.write("Service account JSON length:", len(service_account_json))
+
     service_account_dict = json.loads(service_account_json)
     
-    # 3. Create credentials object
     credentials = service_account.Credentials.from_service_account_info(service_account_dict)
     
     # 4. Create BigQuery client with these credentials
