@@ -11,6 +11,11 @@ from google.oauth2 import service_account
 import os
 
 def load_data():
+    st.write("Secrets keys:", list(st.secrets.keys()))
+
+service_account_json = st.secrets["gcp_service_account"]
+st.write("Service account JSON length:", len(service_account_json))
+
     service_account_json = st.secrets["gcp_service_account"]
     
     # 2. Convert it to a Python dict
